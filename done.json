@@ -1,0 +1,333 @@
+{
+  "phase_0": {
+    "completed": [
+      "Created repository skeleton with cmd/, internal/, pkg/, configs/, docs/, scripts/ directories",
+      "Initialized Go module (go 1.22) for github.com/animus-coder/animus-coder",
+      "Implemented YAML config loader with ENV overrides, defaults, and validation for providers/models/sandbox/tools/agent/server/logging",
+      "Added sample configuration at configs/config.example.yaml",
+      "Built minimal CLI (mycodex) exposing --version and doctor commands with basic tests",
+      "Implemented minimal daemon (mycodexd) with /health and stub /metrics endpoints plus graceful shutdown",
+      "Added developer tooling: Makefile (build/test/lint/fmt/run-daemon) with local cache support, golangci-lint config, pre-commit hooks, gitignore",
+      "Set up CI workflow (GitHub Actions) running lint and tests",
+      "Documented architecture overview and getting-started guide in docs/"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "go.work not required yet; defaults fall back to configs/config.example.yaml when configs/config.yaml is absent."
+  },
+  "phase_1": {
+    "completed": [
+      "Defined LLM layer contracts (Provider, Chat/Stream types, tool-call structs, usage accounting) in internal/llm",
+      "Implemented model/provider registry with logical model routing and resolution",
+      "Added config-driven registry builder that instantiates providers per provider.type",
+      "Delivered OpenAI-compatible provider (openai/custom/openrouter/vllm/lmstudio) with request/response mapping and simulated streaming",
+      "Delivered Ollama provider with basic chat support and simulated streaming",
+      "Added mock provider for tests and docs/models.md covering configuration and APIs"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Streaming currently returns a single chunk; SSE/token streaming to be implemented with agent integration."
+  },
+  "phase_2": {
+    "completed": [
+      "Defined RPC message types for session/task streaming (RunTaskRequest/RunTaskEvent)",
+      "Implemented daemon HTTP endpoint POST /agent/run that streams NDJSON events",
+      "Added CLI command `mycodex run` to POST prompts to daemon and display streamed tokens/messages",
+      "Documented current RPC stub and future Connect RPC migration in docs/rpc.md",
+      "Provided tests for agent handler streaming responses"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Uses NDJSON streaming as a placeholder; upgrade to Connect RPC bidi streaming with session multiplexing planned."
+  },
+  "phase_3": {
+    "completed": [
+      "Implemented basic Agent Core with session history, prompt builders, context injection, and LLM invocation",
+      "Added AgentRunner bridging Agent Core to RPC streaming tokens; daemon now wires /agent/run to the agent",
+      "Added EchoRunner fallback and runner injection for handler tests",
+      "Documented agent basics and context handling stubs in docs/agent.md and docs/context_handling.md"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Agent loop is single-step and non-streaming; tool-calls and richer context loading remain TODO."
+  },
+  "phase_4": {
+    "completed": [
+      "Introduced tools layer with safe path guard rooted per base dir",
+      "Filesystem tool supports read/write/list/search with traversal prevention and configurable write allowance",
+      "Terminal tool supports allow/deny lists, timeouts, and execution toggle",
+      "Added tool registry bundling FS and terminal",
+      "Documented stubs in docs/tools.md"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Git tools and JSON-schema-based tool registry remain TODO; current search is substring-based and streaming/apply_patch are not implemented."
+  },
+  "phase_5": {
+    "completed": [
+      "Added multi-step agent loop with max_steps enforcement and finish heuristics ([done]/finish_reason)",
+      "AgentRunner now iterates steps, streams tokens per step, and signals done reasons (stop or max_steps)",
+      "Expanded RPC events to include step metadata; updated docs/agent.md and docs/rpc.md accordingly",
+      "Added runner tests covering stop and max_steps handling"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Plan/Reflect logic, tool-calls, and test execution steps are still TODO; loop currently reuses same prompt each step."
+  },
+  "phase_6": {
+    "completed": [
+      "Introduced sandbox builder that wires filesystem and terminal tools from config flags",
+      "Terminal/FS tools now gate execution and writes based on sandbox/tools config",
+      "Added sandbox tests for exec enable/disable and traversal prevention",
+      "Documented current security posture and planned enhancements in docs/security.md"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Network enforcement and Docker-based isolation are not yet implemented; git/apply_patch safety still pending."
+  },
+  "phase_7": {
+    "completed": [
+      "Added Prometheus-based observability with agent request/duration/token metrics and dedicated registry",
+      "Exposed /metrics via promhttp when enabled in config",
+      "Instrumented AgentRunner to record finish reasons, durations, and token counts",
+      "Documented observability surface and planned tracing/dashboard work in docs/observability.md"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Token accounting relies on tokenized words; provider-level token usage and tracing remain TODO."
+  },
+  "phase_8": {
+    "completed": [
+      "Added git tool with status and apply_patch (dry-run) capabilities guarded by AllowExec",
+      "Published tool schemas (stub) for fs/terminal/git tool-calling description",
+      "Updated tools documentation to include git stub"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Tool registry not yet wired into agent loop; JSON schema validation and safer patch workflows remain open."
+  },
+  "phase_9": {
+    "completed": [
+      "Exposed tool schemas via /tools/schemas endpoint",
+      "Daemon now builds sandbox+tool registry (fs/terminal/git) and injects into agent runner construction",
+      "Agent runner placeholder ready for tool execution hooks",
+      "Documented registry schema exposure in docs/tools.md"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Actual tool-call execution and validation remain TODO; current schemas are descriptive only."
+  },
+  "phase_10": {
+    "completed": [
+      "Implemented basic tool-call execution in AgentRunner for fs.read/write/search, terminal.exec, git.apply_patch/status",
+      "Extended RunTaskRequest/RunTaskEvent with tool call and tool event fields; CLI prints tool outputs",
+      "Added schema endpoint test and tool execution test",
+      "Updated RPC/tools docs to reflect tool events and schema endpoint"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "No JSON schema validation yet; tool-calls are synchronous and non-streaming, and prompt-driven invocation is still manual."
+  },
+  "phase_11": {
+    "completed": [
+      "Added minimal validation for tool calls (required args, sandbox/allow checks) and dry-run restriction on git apply",
+      "Extended agent runner to execute optional tool calls from request before agent steps and stream tool events",
+      "CLI run command accepts --tools JSON for pre-step tool execution; tool schemas exposed at /tools/schemas with test coverage",
+      "Docs updated for tool-call flow and validation"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Full JSON schema validation and LLM-driven tool-calls still pending; apply_patch backups/rollback are not yet implemented."
+  },
+  "phase_12": {
+    "completed": [
+      "Agent loop can parse simple JSON tool-call instructions from model responses and execute them mid-run, streaming tool events",
+      "Tool call validation expanded (required args, sandbox flags) and git apply enforces dry-run when restricted",
+      "CLI supports --tools pre-seeded calls; docs updated (agent, rpc, tools)"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Tool-call JSON parsing is heuristic (single object or array); full schema validation and plan/reflect-driven tool-calling remain to be done."
+  },
+  "phase_13": {
+    "completed": [
+      "Hardened apply_patch safety: dry-run enforced when sandbox disallows writes; validator rejects non-dry calls in that mode",
+      "Agent runner executes parsed tool-calls from model content mid-loop and streams tool events",
+      "Docs updated to note heuristic tool-call parsing and dry-run enforcement"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "JSON schema validation and plan/reflect-driven tool orchestration still pending; apply_patch backups/rollback remain TODO."
+  },
+  "phase_14": {
+    "completed": [
+      "Added schema-based tool-call validation (required/type checks) and enforced git dry-run when writes are disabled",
+      "Tool-call parser now extracts JSON from fenced blocks and validates against schemas before execution",
+      "Expanded tests for validator; docs updated to mention schema validation"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Parsing remains heuristic; full JSON schema validation and backup/rollback flows still planned."
+  },
+  "phase_15": {
+    "completed": [
+      "Added git apply backups before apply (stored under .mycodex/patch-backups by default or custom dir)",
+      "Dry-run is default/enforced when sandbox disallows writes; non-dry apply rejected in that mode",
+      "Validator/tests updated; docs note backup and dry-run behaviour"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Backup contains diff snapshot; rollback workflow and commit staging remain future work."
+  },
+  "phase_16": {
+    "completed": [
+      "Added restore_backup tool to apply last saved patch (git apply -R) for quick rollback",
+      "Backups now store patch content pre-apply; restore works against latest patch",
+      "Docs updated to reflect backup/rollback behaviour"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Rollback applies latest patch in backup dir; advanced selection and staged backups still pending."
+  },
+  "phase_17": {
+    "completed": [
+      "Added backup management tools: list_backups, preview_backup, restore_backup",
+      "Git tool now stores patch copies pre-apply and supports reversing latest backup",
+      "Schemas/validation updated for new git tools; docs mention backup inspection"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Selecting specific backups is name-based; plan to add richer rollback orchestration."
+  },
+  "phase_18": {
+    "completed": [
+      "Added per-session planning step with cached plan injection into agent prompts when agent.enable_plan is true",
+      "AgentRunner executes planning before steps, streams plan events, and CLI renders plan blocks",
+      "Updated agent and RPC docs to reflect planning flow"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Planning uses the main model and caches per session; reflection and test-run orchestration are still pending."
+  },
+  "phase_19": {
+    "completed": [
+      "Introduced reflection step after each agent turn with cached injection into subsequent prompts and streamed reflect events",
+      "Added optional test-run phase via sandboxed terminal using agent.test_command, streaming test output/exit codes",
+      "Updated CLI, RPC docs, agent docs, and config to surface reflect/test-run behaviours"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Reflection uses the primary model; test execution depends on terminal availability and sandbox flags."
+  },
+  "phase_20": {
+    "completed": [
+      "Sandbox now auto-denies common network commands when sandbox.allow_network is false (curl/wget/ping/nc/telnet/ssh/scp/sftp)",
+      "Terminal validation blocks network commands by default deny list; sandbox tests cover network gating",
+      "Security documentation updated to reflect network restriction behaviour"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Network denial is command-based; deeper syscall/network sandboxing remains future work."
+  },
+  "phase_21": {
+    "completed": [
+      "Added context file loading via RunTaskRequest.context_paths and CLI --context flag with sandboxed filesystem guard",
+      "AgentRunner injects loaded context into planning and execution prompts with configurable size cap agent.max_context_bytes",
+      "Documentation updated for context handling; tests cover context loading flow"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Context limit truncates oversized files with marker; future work includes ignore patterns and agent-driven selective loading."
+  },
+  "phase_22": {
+    "completed": [
+      "Introduced Connect RPC bidirectional RunTask stream with session/correlation ids defaulted server-side and legacy NDJSON path kept",
+      "CLI run command can speak Connect (h2c) or legacy NDJSON based on server.transport config and propagates cancel",
+      "Daemon serves Connect handler over h2c with transport switch and shared tool registry, JSON codec implemented for generic payloads",
+      "Transport metrics now track active sessions and handler errors per transport in Prometheus exports"
+    ],
+    "tests": [
+      "GOMODCACHE=.gomodcache GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Initial Connect transport wired; backpressure tuning, multiplexing semantics, and expanded tests still pending."
+  },
+  "phase_23": {
+    "completed": [
+      "Added lightweight semantic engine with tokenizer-based search and registry plumbing behind tools.enable_semantic",
+      "Exposed semantic.search tool with schema/validation and agent runner execution, returning ranked snippets",
+      "Agent auto-context now consults semantic search hits (when enabled) before default path discovery"
+    ],
+    "tests": [
+      "GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Semantic engine currently uses naive overlap scoring; embedding providers, indexing, and chunking remain future work."
+  },
+  "phase_24": {
+    "completed": [
+      "Reflection prompt now asks for structured JSON critique (quality/issues/recommendations/block_apply/notes) per step",
+      "RunTaskEvent carries parsed critique data when reflection returns valid JSON",
+      "Reflection policy (block_on_critical/warn_only/never_block) added; block_on_critical stops the run with finish_reason=blocked_by_reflect when critique demands",
+      "CLI renders critique JSON when present on reflect events and RPC docs mention critique payload",
+      "Self-diff flag adds previous vs current assistant response into reflection prompt to improve critique fidelity"
+    ],
+    "tests": [
+      "GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Critique is parsed opportunistically; enforcement/blocking and self-diff logic remain TODO."
+  },
+  "phase_25": {
+    "completed": [
+      "Patch backups now maintain a stack with lineage metadata (id/parent/timestamp) persisted alongside patch files",
+      "git.restore_backup accepts optional backup id/name and list_backups returns stack ids for clarity",
+      "docs/tools.md updated to describe stack-aware git backup/restore behaviour"
+    ],
+    "tests": [
+      "GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Stack metadata powers lineage; advanced branching, apply validation against working tree, and rollback sequencing remain future work."
+  },
+  "phase_26": {
+    "completed": [
+      "Test-run events now include parsed failing test names and summaries; reflection/test prompts can leverage structured failures",
+      "Simple test output parser added for FAIL/Error lines; CLI and RPC surfaces expose failing_tests/test_summary fields"
+    ],
+    "tests": [
+      "GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Parsing is heuristic; richer language-specific parsers and iterative test/fix loops are still ahead."
+  },
+  "phase_27": {
+    "completed": [
+      "Added test retries and per-attempt timeout config; runner retries tests and reports attempts in events",
+      "Reflection/test prompts include failing test lists, summaries, and attempts; CLI surfaces failing tests/attempts/summary",
+      "Documented early test-driven workflow in docs/tests.md",
+      "Introduced multi-model strategy layer with per-role selection (planner/coder/critic), CLI overrides, fallbacks on model errors, and cost-aware budgeting with usage/failure metrics and debug logging"
+    ],
+    "tests": [
+      "GOCACHE=.gocache go test ./..."
+    ],
+    "notes": "Strategy engine now drives role-specific model picks with fallbacks; richer integration tests and quality metrics remain future work alongside iterative test-fix orchestration."
+  }
+}

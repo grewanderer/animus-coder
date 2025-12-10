@@ -1,0 +1,46 @@
+<svg width="1400" height="380" viewBox="0 0 1400 380" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="fog" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#E4EEF5" stop-opacity="0.85"/>
+      <stop offset="50%" stop-color="#C8D9E6" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#8FA5B8" stop-opacity="0.8"/>
+    </linearGradient>
+
+    <radialGradient id="glow" cx="50%" cy="50%" r="80%">
+      <stop offset="0%" stop-color="#AEE4FF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="30"/>
+    </filter>
+  </defs>
+
+  <!-- Background fog -->
+  <rect width="1400" height="380" fill="url(#fog)" />
+
+  <!-- Subtle DNA lines -->
+  <g opacity="0.12" stroke="#AEE4FF" stroke-width="2">
+    <path d="M200 20 C150 120 250 260 200 360" />
+    <path d="M240 20 C190 120 290 260 240 360" />
+    <path d="M280 20 C230 120 330 260 280 360" />
+  </g>
+
+  <circle cx="900" cy="160" r="180" fill="url(#glow)" filter="url(#blur)" opacity="0.35"/>
+
+  <!-- Title -->
+  <text x="700" y="170" text-anchor="middle"
+        font-family="Segoe UI, Roboto, sans-serif"
+        font-size="64" letter-spacing="8"
+        fill="#EAF6FF" opacity="0.92">
+    ANIMUS CODER
+  </text>
+
+  <!-- Subtitle -->
+  <text x="700" y="240" text-anchor="middle"
+        font-family="Segoe UI, Roboto, sans-serif"
+        font-size="26" letter-spacing="3"
+        fill="#CFE6F3" opacity="0.8">
+    AUTONOMOUS AI ENGINEER • MEMORY-CORE TOOLCHAIN • LLM-POWERED CODING AGENT
+  </text>
+</svg>

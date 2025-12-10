@@ -1,0 +1,7 @@
+bin/
+.gocache/
+.gomodcache/
+.idea/
+.vscode/
+*.log
+coverage.*

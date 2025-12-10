@@ -1,0 +1,83 @@
+version: "0.1.0"
+
+logging:
+  level: info
+  format: console
+
+server:
+  addr: ":8080"
+  metrics_enabled: true
+  transport: connect # connect (default) or ndjson for legacy mode
+
+providers:
+  openrouter:
+    type: openrouter
+    base_url: https://openrouter.ai/api/v1
+    api_key: "" # set via MYCODEX_PROVIDERS_OPENROUTER_API_KEY
+    timeout: 30s
+    max_tokens: 4096
+  ollama:
+    type: ollama
+    base_url: http://127.0.0.1:11434
+    timeout: 20s
+
+models:
+  default:
+    provider: openrouter
+    model: openrouter/gpt-4o-mini
+    temperature: 0.2
+    max_tokens: 2048
+    default: true
+    expensive: false
+  local-coder:
+    provider: ollama
+    model: qwen2.5-coder
+    temperature: 0.4
+    max_tokens: 1024
+    expensive: false
+
+sandbox:
+  enabled: true
+  allow_network: false
+  allow_write: false
+  allowed_commands:
+    - go
+    - git
+  denied_commands:
+    - docker
+    - sudo
+  working_dir: "."
+  timeout_seconds: 120
+
+tools:
+  allow_exec: true
+  allow_git: true
+  allow_file_write: true
+  exec_timeout_seconds: 120
+  enable_semantic: false
+  semantic_max_files: 200
+  semantic_max_file_bytes: 65536
+
+agent:
+  max_steps: 8
+  max_tokens: 1024
+  temperature: 0.2
+  enable_plan: true
+  enable_reflect: true
+  reflection_policy: block_on_critical # block_on_critical | warn_only | never_block
+  enable_self_diff: false
+  enable_test_run: false
+  test_command: "" # e.g. "go test ./..." when enable_test_run is true
+  test_retries: 0
+  test_timeout_seconds: 0
+  max_context_bytes: 32768
+
+strategy:
+  default_model: default
+  planner_model: ""
+  coder_model: ""
+  critic_model: ""
+  overrides: {}
+  fallbacks:
+    - local-coder
+  max_expensive: 1
