@@ -1,4 +1,4 @@
-# Animus-coder (MyCodex) — Autonomous Coding Agent
+# Animus-coder — Autonomous Coding Agent
 
 An open, controllable autonomous coding agent that plans, edits, runs tests, critiques itself, and streams progress to your terminal. The project ships a daemon (`mycodexd`), a CLI (`mycodex`), and a modular agent core wired to tools, sandbox, observability, and a multi-model strategy layer.
 
